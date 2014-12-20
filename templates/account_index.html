@@ -1,0 +1,151 @@
+<html ng-app="socialLite">
+<head>
+	<title>Social Lite</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="static/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/angular.min.js"></script>
+    <script type="text/javascript" src="static/js/app.js"></script>
+    <script type="text/javascript" src="static/js/main.js"></script>
+</head>
+<body ng-controller="EventController as eveCtrl">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Social Lite</a>
+			</div>
+
+			<div class="navbar-collapse" ng-controller="UserController as userCtrl">
+				<ul class="nav navbar-nav">
+					<li><a href="addNewEvent">Create an Event</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li ng-hide="userCtrl.checkUser()"><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
+					<li ng-hide="userCtrl.checkUser()"><a href="#" data-toggle="modal" data-target="#signupModal">Sign up</a></li>
+				    <li ng-show="userCtrl.checkUser()" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><label>{{'{{userCtrl.currentUser.displayname}}'}}</label> <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/profile">Edit Profile</a></li>
+                            <li><a href="/account_index">Account Index</a></li>
+                            <li class="divider"></li>
+                            <li><a ng-click="userCtrl.logout()">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+			</div>
+		</div>
+	</nav>
+    <div class="container" ng-controller="AccountController as accCtrl">
+        <div class="col-md-12">
+            <section class="reco-list">
+                <div>
+                    <h1>You may interested in these events:</h1>
+                </div>
+                <div class="repeat-list-frame">
+                    <ul>
+                        <li ng-repeat="item in accCtrl.reco" class="repeat-list">
+                            <div class="col-md-4"><a href="eventDetail" ng-click="gotoEventDetail(item.eventid)"><h2>{{'{{item.title}}'}}</h2></a></div>
+                            <div class="col-md-8">Created by: <label><h3>{{'{{item.creator}}'}}</h3></label></div>
+                            <div class="col-md-4">Event Date: <label><h4>{{'{{item.date}}'}}</h4></label></div>
+                            <div class="col-md-8">Total Attenders: {{'{{item.member_count}}'}}</div>
+                            <div class="col-md-12">Event Category:
+                                <ul class="taglist">
+                                    <li ng-repeat="itt in item.category">
+                                        <span class="btn btn-primary">{{'{{itt}}'}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-12">Event Key Words:
+                                <ul class="taglist">
+                                    <li ng-repeat="itts in item.tag">
+                                        <span>{{'{{itts}}'}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-12">
+            <section class="rsvped-event-list">
+                <div>
+                    <h1>Here are events you have rsvped:</h1>
+                </div>
+                <div class="repeat-list-frame">
+                    <ul>
+                        <li ng-repeat="item in accCtrl.rsvpedEvent" class="repeat-list">
+                            <div class="col-md-4"><a href="eventDetail" ng-click="gotoEventDetail(item.eventid)"><h2>{{'{{item.title}}'}}</h2></a></div>
+                            <div class="col-md-8">Created by: <label><h3>{{'{{item.creator}}'}}</h3></label></div>
+                            <div class="col-md-4">Event Date: <label><h4>{{'{{item.date}}'}}</h4></label></div>
+                            <div class="col-md-8">Total Attenders: {{'{{item.member_count}}'}}</div>
+                            <div class="col-md-12">Event Category:
+                                <ul class="taglist">
+                                    <li ng-repeat="itt in item.category">
+                                        <span class="btn btn-primary">{{'{{itt}}'}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+    </div>
+    <div ng-controller="UserController as userCtrl">
+<!--    modal windows-->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h2 class="modal-title" id="myModalLabel">Login</h2>
+                    <p>Don't have an account? <a href="#">Sign up now.</a></p>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <p>Username:</p>
+                        <p><input type="text" class="form-control" ng-model="userCtrl.auth.username"/></p>
+                        <p>Password:</p>
+                        <p><input type="password" class="form-control" ng-model="userCtrl.auth.password"/></p>
+                        <p style="margin-top:20px;">
+                            <a href="/"><button type="button" class="btn btn-primary" ng-click="userCtrl.login()">Login</button></a><label class="msg-label">{{'{{userCtrl.msg}}'}}</label>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h2 class="modal-title" id="H1">Sign up</h2>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <p>Username: </p>
+                        <p><input type="text" class="form-control" ng-model="userCtrl.auth.username" /></p>
+                        <p>Password:</p>
+                        <p><input type="password" class="form-control" ng-model="userCtrl.auth.password" /></p>
+                        <p style="margin-top:20px;">
+                            <a href="/profile"><button type="button" class="btn btn-success" style="width:100%;" ng-click="userCtrl.signup()">Sign up</button></a><label class="msg-label">{{'{{userCtrl.msg}}'}}</label>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <footer>
+        &copy; 2014 Social Lite all right reserved.
+    </footer>
+    </body>
+</html>

@@ -1,0 +1,222 @@
+<html ng-app="socialLite">
+<head>
+	<title>Social Lite</title>
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <link rel="stylesheet" type="text/css" href="static/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,400' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/angular.min.js"></script>
+    <script type="text/javascript" src="static/js/app.js"></script>
+    <script type="text/javascript" src="static/js/main.js"></script>
+</head>
+<body ng-controller="EventController as eveCtrl">
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="/">Social Lite</a>
+			</div>
+
+			<div class="navbar-collapse" ng-controller="UserController as userCtrl">
+				<ul class="nav navbar-nav">
+					<li><a href="addNewEvent">Create an Event</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li ng-hide="userCtrl.checkUser()"><a href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
+					<li ng-hide="userCtrl.checkUser()"><a href="#" data-toggle="modal" data-target="#signupModal">Sign up</a></li>
+				    <li ng-show="userCtrl.checkUser()" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><label>{{'{{userCtrl.currentUser.displayname}}'}}</label> <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/profile">Edit Profile</a></li>
+                            <li><a href="/account_index">Account Index</a></li>
+                            <li class="divider"></li>
+                            <li><a ng-click="userCtrl.logout()">Log out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+			</div>
+		</div>
+	</nav>
+
+        <div class="container">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="event-detail">
+                    <h1><strong>{{'{{eveCtrl.eventDetail.title}}'}}</strong></h1>
+                    <table>
+                        <tr>
+                            <td>
+                                Created by:
+                            </td>
+                            <td>
+                                {{'{{eveCtrl.eventDetail.creator}}'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Location:
+                            </td>
+                            <td>
+                                <span>{{'{{eveCtrl.eventDetail.address}}'}}</span><span>{{'{{eveCtrl.eventDetail.city}}'}}</span><span>{{'{{eveCtrl.eventDetail.state}}'}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Date:
+                            </td>
+                            <td>
+                                 <span>{{'{{eveCtrl.eventDetail.date}}'}}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Category:
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="item in eveCtrl.eventDetail.category">
+                                        <label class="btn btn-primary">{{'{{item}}'}}</label>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tags:
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="item in eveCtrl.eventDetail.tag">
+                                        <label>{{'{{item}}'}}</label>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Current attenders:
+                            </td>
+                            <td>
+                                <ul>
+                                    <li ng-repeat="item in eveCtrl.eventDetail.member">
+                                        <label class="btn btn-success">{{'{{item}}'}}</label>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Total attenders:
+                            </td>
+                            <td>
+                                {{'{{eveCtrl.eventDetail.member_count}}'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Thumbnail:
+                            </td>
+                            <td>
+                                <img style="height: 300px; width:auto;" ng-src="{{'{{eveCtrl.eventDetail.thumbnail}}'}}" ng-alt="{{'{{eveCtrl.eventDetail.title}}'}}" />
+                            </td>
+                        </tr>
+                    </table>
+                    <article>
+                        <h2>Description</h2>
+                        <p>
+                            {{'{{eveCtrl.eventDetail.detail}}'}}
+                        </p>
+                    </article>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-default" ng-disabled="eveCtrl.rsvpflag" ng-click="eveCtrl.rsvpEvent()">RSVP</button><label class="msg-label">{{'{{eveCtrl.rsvpmsg}}'}}</label>
+                </div>
+                <section class="discussion-board">
+                    <div class="read-section">
+                        <ul>
+                            <li ng-repeat="item in eveCtrl.discussion">
+                                <div><h2>{{'{{item.title}}'}}</h2></div>
+                                <span>Creator:<label>{{'{{item.creator}}'}}</label></span>
+                                <span>Attitude: <label>{{'{{item.point}}'}}</label></span>
+                                <article style="margin-left: 40px;">{{'{{item.content}}'}}</article>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="write-section">
+                        <form name="discussionForm" ng-submit="discussionForm.$valid && eveCtrl.postNewDiscussion()">
+                            <table>
+                                <tr>
+                                    <td>
+                                        Title:
+                                    </td>
+                                    <td>
+                                        <input style="width:400px;" type="text" ng-model="eveCtrl.newPost.title" required=""/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Content:
+                                    </td>
+                                    <td>
+                                        <textarea rows="8" style="width:400px;" type="text" ng-model="eveCtrl.newPost.content" required=""> </textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                            <button type="submit" class="btn btn-default" value="submit">Submit</button><label class="msg-label">{{'{{eveCtrl.msg}}'}}</label>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    <div ng-controller="UserController as userCtrl">
+<!--    modal windows-->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h2 class="modal-title" id="myModalLabel">Login</h2>
+                    <p>Don't have an account? <a href="#">Sign up now.</a></p>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <p>Username:</p>
+                        <p><input type="text" class="form-control" ng-model="userCtrl.auth.username"/></p>
+                        <p>Password:</p>
+                        <p><input type="password" class="form-control" ng-model="userCtrl.auth.password"/></p>
+                        <p style="margin-top:20px;">
+                            <a href="/"><button type="button" class="btn btn-primary" ng-click="userCtrl.login()">Login</button></a><label class="msg-label">{{'{{userCtrl.msg}}'}}</label>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h2 class="modal-title" id="H1">Sign up</h2>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <p>Username: </p>
+                        <p><input type="text" class="form-control" ng-model="userCtrl.auth.username" /></p>
+                        <p>Password:</p>
+                        <p><input type="password" class="form-control" ng-model="userCtrl.auth.password" /></p>
+                        <p style="margin-top:20px;">
+                            <a href="/profile"><button type="button" class="btn btn-success" style="width:100%;" ng-click="userCtrl.signup()">Sign up</button></a><label class="msg-label">{{'{{userCtrl.msg}}'}}</label>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <footer>
+        &copy; 2014 Social Lite all right reserved.
+    </footer>
+    </body>
+</html>
