@@ -1,4 +1,4 @@
-Meetup Website Project ——— Social Lite
+Meetup Website Project —— Social Lite
 =====
 - By Bingqing Huang(Client Side), Weidong Li(Server Side), Gaurav Wadhwani(Email Function)
 
