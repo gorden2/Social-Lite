@@ -42,7 +42,7 @@ def handletag(s):
 def sendemail(email,time,detail,title):
     CRLF = "\r\n"
     login = "sociallite743@gmail.com" #Add the sender email address
-    password = "huangbingqing" #Have to add the password for the above email address
+    password =  #Have to add the password for the above email address
     time = str(time)
     print "time: "+time
     time = re.sub(r"(.+)-(.+)-(.+)",r"\1\2\3",time)
